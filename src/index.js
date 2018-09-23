@@ -11,10 +11,11 @@ function photoSlider(images, options) {
     currentPhoto: 0,
     images,
     options: {
-      defaultTime: options.defaultTime || 3000,
-      autoStart: options.defaultTime || false,
-      rewind: options.defaultTime || true,
-      customClass: options.customClass || ''
+      defaultTime: 3000,
+      autoStart: false,
+      rewind: true,
+      customContainerClass: '',
+      ...options
     }
   }
 
@@ -55,7 +56,7 @@ function photoSlider(images, options) {
     stepperEl.children[0].classList.toggle('stepper-dot-active')
 
     photoSliderEl.classList.add('photo-slider')
-    if (options.customClass) photoSliderEl.classList.add(options.customClass)
+    if (options.customContainerClass) photoSliderEl.classList.add(options.customContainerClass)
 
     navigationEl.classList.add('navigation-container')
     imageContainerEl.classList.add('image-container')
