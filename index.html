@@ -1,0 +1,22 @@
+<html>
+<head>
+  <title>Photo Slider</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="src/style.css">
+</head>
+
+<body>
+  <div id="photo-slider"></div>
+  <script src="src/index.js"></script>
+  <script>
+    const images = [
+      { src: 'https://steemitimages.com/0x0/https://i.imgflip.com/246d0f.jpg', alt: 'Good Boi', displayTime: 2000 },
+      { src: 'https://i.pinimg.com/564x/9a/f0/6e/9af06e5d54f84893f0c614b8eed4ada8.jpg', alt: 'yoga boi', displayTime: 5000 },
+      { src: 'https://i.pinimg.com/originals/cf/c9/d4/cfc9d469ceac1628941612a6f3428ba1.jpg', alt: 'Happy Boi', displayTime: 1000 }
+    ]
+    const options = {}
+    photoSlider(images, options)
+  </script>
+</body>
+
+</html>

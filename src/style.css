@@ -1,0 +1,125 @@
+.photo-slider-container {
+  display: inline-block;
+  height: 500px;
+  width: 800px;
+  position: absolute;
+}
+
+.photo-slider {
+  box-shadow: 0 0 5px 0px #00000063;
+  background-color: #98989800;
+}
+
+.custom-size {
+  height: 500px;
+  width: 100%;
+}
+
+.image-container {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.image-container .slider-image {
+  height: 100%;
+  width: 100%;
+  display: none;
+  object-fit: cover;
+  transition: all 3s ease-in-out;
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+.image-container .slider-image-active {
+  display: block;
+}
+
+.slider-stepper {
+  bottom: 2%;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+}
+
+.slider-stepper .stepper-dot {
+  background-color: grey;
+  border-radius: 50%;
+  display: inline-block;
+  height: 10px;
+  margin: 0 5px;
+  transition: all 0.2s ease-in-out;
+  width: 10px;
+}
+
+.slider-stepper .stepper-dot:hover {
+  background-color: darkgray;
+  cursor: pointer;
+}
+
+.slider-stepper .stepper-dot-active, .slider-stepper .stepper-dot-active:hover {
+  background-color: black;
+}
+
+
+.navigation-container {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  top: calc(50% - 20px);
+  z-index: 999;
+  width: 100%;
+}
+
+.navigation-container .btn-nav {
+  background-color: rgba(0, 0, 0, 0.8);
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  font-size: 20px;
+  outline: none;
+  padding: 10px;
+}
+
+.navigation-container .btn-nav:hover {
+  background-color: black;
+}
+
+.navigation-container .btn-nav.prev-nav {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.navigation-container .btn-nav.next-nav {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.spinner:before {
+  animation: spinner 0.7s ease-in-out infinite;
+  border: 5px solid #ddd;
+  border-radius: 50%;
+  border-top-color: rgba(0,0,0,0.5);
+  content: '';
+  height: 60px;
+  left: 50%;
+  margin-top: -30px;
+  margin-left: -30px;
+  position: absolute;
+  top: 50%;
+  z-index: 9999999999;
+  width: 60px;
+}
+
+@keyframes fade {
+  0% { opacity: 0.4; }
+  20% { opacity: 0.7; }
+  20% { opacity: 0.7; }
+ 100% { opacity: 1; }
+}
+
+@keyframes spinner {
+  to { transform: rotate(360deg); }
+}
