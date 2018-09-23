@@ -19,6 +19,8 @@ const options = {
   defaultTime: 3000,
   autoStart: false,
   rewind: true,
+  hideNavigation: true,
+  hideStepper: true,
   customClass: 'custom-photo-slider'
   }
 

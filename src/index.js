@@ -12,8 +12,10 @@ function photoSlider(images, options) {
     images,
     options: {
       defaultTime: 3000,
-      autoStart: false,
-      rewind: true,
+      autoStart: true,
+      rewind: false,
+      hideNavigation: false,
+      hideStepper: false,
       customContainerClass: '',
       ...options
     }
@@ -37,44 +39,53 @@ function photoSlider(images, options) {
       imageContainerEl.appendChild(imageEl)
     })
 
-    // Stepper Initil render
-    images.forEach((image, key) => {
-      const stepperDotEl = document.createElement('span')
-      stepperDotEl.classList.add('stepper-dot')
-      stepperEl.addEventListener('click', setImage, false)
-      stepperEl.appendChild(stepperDotEl)
-      stepperDotEl.dataset.target = key
-    })
-
     // Display first slide
     const firstImgEl = imageContainerEl.children[0]
     const firstImg = images[currentPhoto]
     await fetchImg(firstImgEl, firstImg.src)
     firstImgEl.classList.toggle('slider-image-active')
 
-    //Set stepper to first step
-    stepperEl.children[0].classList.toggle('stepper-dot-active')
-
     photoSliderEl.classList.add('photo-slider')
     if (options.customContainerClass) photoSliderEl.classList.add(options.customContainerClass)
 
-    navigationEl.classList.add('navigation-container')
     imageContainerEl.classList.add('image-container')
-    nextButtonEl.classList.add('btn-nav', 'next-nav')
-    prevButtonEl.classList.add('btn-nav', 'prev-nav')
-    stepperEl.classList.add('slider-stepper')
 
-    nextButtonEl.innerHTML = '<svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" style="vertical-align: middle;"><g><path d="m26.3 21.4q0 0.3-0.2 0.5l-10.4 10.4q-0.3 0.3-0.6 0.3t-0.5-0.3l-1.1-1.1q-0.2-0.2-0.2-0.5t0.2-0.5l8.8-8.8-8.8-8.7q-0.2-0.3-0.2-0.6t0.2-0.5l1.1-1.1q0.3-0.2 0.5-0.2t0.6 0.2l10.4 10.4q0.2 0.2 0.2 0.5z"></path></g></svg>'
-    prevButtonEl.innerHTML = '<svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" style="vertical-align: middle;"><g><path d="m26.5 12.1q0 0.3-0.2 0.6l-8.8 8.7 8.8 8.8q0.2 0.2 0.2 0.5t-0.2 0.5l-1.1 1.1q-0.3 0.3-0.6 0.3t-0.5-0.3l-10.4-10.4q-0.2-0.2-0.2-0.5t0.2-0.5l10.4-10.4q0.3-0.2 0.5-0.2t0.6 0.2l1.1 1.1q0.2 0.2 0.2 0.5z"></path></g></svg>'
+    if (!Boolean(options.hideNavigation)) {
+      navigationEl.classList.add('navigation-container')
+      nextButtonEl.classList.add('btn-nav', 'next-nav')
+      prevButtonEl.classList.add('btn-nav', 'prev-nav')
+      nextButtonEl.innerHTML = '<svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" style="vertical-align: middle;"><g><path d="m26.3 21.4q0 0.3-0.2 0.5l-10.4 10.4q-0.3 0.3-0.6 0.3t-0.5-0.3l-1.1-1.1q-0.2-0.2-0.2-0.5t0.2-0.5l8.8-8.8-8.8-8.7q-0.2-0.3-0.2-0.6t0.2-0.5l1.1-1.1q0.3-0.2 0.5-0.2t0.6 0.2l10.4 10.4q0.2 0.2 0.2 0.5z"></path></g></svg>'
+      prevButtonEl.innerHTML = '<svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" style="vertical-align: middle;"><g><path d="m26.5 12.1q0 0.3-0.2 0.6l-8.8 8.7 8.8 8.8q0.2 0.2 0.2 0.5t-0.2 0.5l-1.1 1.1q-0.3 0.3-0.6 0.3t-0.5-0.3l-10.4-10.4q-0.2-0.2-0.2-0.5t0.2-0.5l10.4-10.4q0.3-0.2 0.5-0.2t0.6 0.2l1.1 1.1q0.2 0.2 0.2 0.5z"></path></g></svg>'
 
-    nextButtonEl.addEventListener('click', () => nextImage())
-    prevButtonEl.addEventListener('click', () => prevImage())
+      nextButtonEl.addEventListener('click', () => nextImage())
+      prevButtonEl.addEventListener('click', () => prevImage())
 
-    navigationEl.appendChild(prevButtonEl)
-    navigationEl.appendChild(nextButtonEl)
+      navigationEl.appendChild(prevButtonEl)
+      navigationEl.appendChild(nextButtonEl)
 
-    photoSliderEl.appendChild(navigationEl)
+      photoSliderEl.appendChild(navigationEl)
+
+    }
+
     photoSliderEl.appendChild(imageContainerEl)
+
+    if (!Boolean(options.hideStepper)) {
+      stepperEl.classList.add('slider-stepper')
+
+      // Stepper Initil render
+      images.forEach((image, key) => {
+        const stepperDotEl = document.createElement('span')
+        stepperDotEl.classList.add('stepper-dot')
+        stepperEl.addEventListener('click', setImage, false)
+        stepperEl.appendChild(stepperDotEl)
+        stepperDotEl.dataset.target = key
+      })
+
+      //Set stepper to first step
+      stepperEl.children[0].classList.toggle('stepper-dot-active')
+    }
+
+
     photoSliderEl.appendChild(stepperEl)
 
   }
@@ -117,9 +128,9 @@ function photoSlider(images, options) {
 
   function setImage(e) {
     e.stopPropagation()
-    const imageIndex = e.target.dataset.target
-    if (!isNaN(Number(imageIndex))) {
-      photoSliderState.currentPhoto = Number(imageIndex)
+    const imageIndex = Number(e.target.dataset.target)
+    if (!isNaN(imageIndex) && imageIndex !== photoSliderState.currentPhoto) {
+      photoSliderState.currentPhoto = imageIndex
       renderSliderImage()
       renderStepper()
     }
@@ -127,15 +138,15 @@ function photoSlider(images, options) {
 
   function startSlideShow() {
     const { autoStart, defaultTime, rewind } = photoSliderState.options
-    if (!autoStart) return
+    if (!Boolean(autoStart)) return
 
     const getDisplayTime = () => {
       const { currentPhoto, images, } = photoSliderState
-      return images[currentPhoto].displayTime ? images[currentPhoto].displayTime : defaultTime
+      return images[currentPhoto].displayTime ? images[currentPhoto].displayTime : Number(defaultTime)
     }
 
     const slide = () => {
-      rewind ? prevImage() : nextImage()
+      Boolean(rewind) ? prevImage() : nextImage()
       const displayTime = getDisplayTime()
       setTimeout(slide, displayTime)
     }
