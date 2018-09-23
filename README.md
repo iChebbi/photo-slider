@@ -5,7 +5,7 @@ A simple photo slider
 ## Usage
 
 Include `css` & `js` files
-call `photoSlider(images <Array>, options<Object>)` function
+and call `photoSlider(images <Array>, options<Object>)` function
 
 ## Example
 
