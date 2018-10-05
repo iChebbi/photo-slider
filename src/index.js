@@ -57,8 +57,8 @@ function photoSlider(images, options) {
       nextButtonEl.innerHTML = '<svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" style="vertical-align: middle;"><g><path d="m26.3 21.4q0 0.3-0.2 0.5l-10.4 10.4q-0.3 0.3-0.6 0.3t-0.5-0.3l-1.1-1.1q-0.2-0.2-0.2-0.5t0.2-0.5l8.8-8.8-8.8-8.7q-0.2-0.3-0.2-0.6t0.2-0.5l1.1-1.1q0.3-0.2 0.5-0.2t0.6 0.2l10.4 10.4q0.2 0.2 0.2 0.5z"></path></g></svg>'
       prevButtonEl.innerHTML = '<svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" style="vertical-align: middle;"><g><path d="m26.5 12.1q0 0.3-0.2 0.6l-8.8 8.7 8.8 8.8q0.2 0.2 0.2 0.5t-0.2 0.5l-1.1 1.1q-0.3 0.3-0.6 0.3t-0.5-0.3l-10.4-10.4q-0.2-0.2-0.2-0.5t0.2-0.5l10.4-10.4q0.3-0.2 0.5-0.2t0.6 0.2l1.1 1.1q0.2 0.2 0.2 0.5z"></path></g></svg>'
 
-      nextButtonEl.addEventListener('click', () => nextImage())
-      prevButtonEl.addEventListener('click', () => prevImage())
+      nextButtonEl.addEventListener('click', () => withRender(nextImage))
+      prevButtonEl.addEventListener('click', () => withRender(prevImage))
 
       navigationEl.appendChild(prevButtonEl)
       navigationEl.appendChild(nextButtonEl)
@@ -72,11 +72,13 @@ function photoSlider(images, options) {
     if (!Boolean(options.hideStepper)) {
       stepperEl.classList.add('slider-stepper')
 
+      const eventHandler = e => withRender(setImage, e)
+
       // Stepper Initil render
       images.forEach((image, key) => {
         const stepperDotEl = document.createElement('span')
         stepperDotEl.classList.add('stepper-dot')
-        stepperEl.addEventListener('click', setImage, false)
+        stepperEl.addEventListener('click', eventHandler, false)
         stepperEl.appendChild(stepperDotEl)
         stepperDotEl.dataset.target = key
       })
@@ -94,20 +96,21 @@ function photoSlider(images, options) {
     const { currentPhoto, images } = photoSliderState
 
     const nextImgEl = imageContainerEl.children[currentPhoto]
-    await fetchImg(nextImgEl, images[currentPhoto].src)
+    if (nextImgEl.src !== images[currentPhoto].src)
+      await fetchImg(nextImgEl, images[currentPhoto].src)
 
     Array.from(imageContainerEl.children).forEach((child, key) => {
       if (currentPhoto !== key) child.classList.remove('slider-image-active')
     })
 
-    nextImgEl.classList.toggle('slider-image-active')
+    nextImgEl.classList.add('slider-image-active')
   }
 
   function renderStepper() {
     const { currentPhoto } = photoSliderState
 
     Array.from(stepperEl.children).forEach((child, key) => {
-      if (currentPhoto === key) child.classList.toggle('stepper-dot-active')
+      if (currentPhoto === key) child.classList.add('stepper-dot-active')
       else child.classList.remove('stepper-dot-active')
     })
   }
@@ -115,15 +118,11 @@ function photoSlider(images, options) {
   function nextImage() {
     const { currentPhoto, images } = photoSliderState
     photoSliderState.currentPhoto = images.length === currentPhoto + 1 ? 0 : currentPhoto + 1
-    renderSliderImage()
-    renderStepper()
   }
 
   function prevImage() {
     const { currentPhoto, images } = photoSliderState
     photoSliderState.currentPhoto = currentPhoto === 0 ? images.length - 1 : currentPhoto - 1
-    renderSliderImage()
-    renderStepper()
   }
 
   function setImage(e) {
@@ -131,6 +130,12 @@ function photoSlider(images, options) {
     const imageIndex = Number(e.target.dataset.target)
     if (!isNaN(imageIndex) && imageIndex !== photoSliderState.currentPhoto) {
       photoSliderState.currentPhoto = imageIndex
+    }
+  }
+
+  function withRender(func, e = null) {
+    if (typeof func === 'function' && e !== undefined) {
+      func(e)
       renderSliderImage()
       renderStepper()
     }
@@ -146,7 +151,7 @@ function photoSlider(images, options) {
     }
 
     const slide = () => {
-      Boolean(rewind) ? prevImage() : nextImage()
+      withRender(Boolean(rewind) ? prevImage : nextImage)
       const displayTime = getDisplayTime()
       setTimeout(slide, displayTime)
     }
