@@ -9,6 +9,8 @@ and call `photoSlider(images <Array>, options<Object>)` function
 
 ## Example
 
+A live demo is available [here](https://ichebbi.github.io/photo-slider/)
+
 ```javascript
 const images = [
   { src: 'link', alt: '', displayTime: 1000 },
